@@ -79,6 +79,7 @@ footer {
 	font-size: 4.5rem;
 }
 
+/* ??? Why does adding justify-content have no effect here? */
 .page-content {
 	flex: 1;
 	display: flex;
