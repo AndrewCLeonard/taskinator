@@ -33,7 +33,7 @@ var taskFormHandler = function (event) {
 	// send it as an argument to createTaskEl
 	createTaskEl(taskDataObj);
 };
-
+// creates: TaskEl, taskId, taskInfoEl, taskActionsEl, & increments counter
 var createTaskEl = function (taskDataObj) {
 	// create list item
 	var listItemEl = document.createElement("li");
@@ -62,7 +62,7 @@ var createTaskEl = function (taskDataObj) {
 	taskIdCounter++;
 };
 
-// create action buttons for each task
+// action buttons for each task
 var createTaskActions = function (taskId) {
 	// create container to hold elements
 	var actionContainerEl = document.createElement("div");
@@ -101,7 +101,7 @@ var createTaskActions = function (taskId) {
 
 	return actionContainerEl;
 };
-
+// task button functionality
 var taskButtonHandler = function (event) {
 	// get target element from event
 	var targetEl = event.target;
@@ -116,24 +116,32 @@ var taskButtonHandler = function (event) {
 		deleteTask(taskId);
 	}
 };
-
+// task edit functionality
 var editTask = function (taskId) {
-	console.log("editing task #" + taskId);
-
-	//get task list item element
+	// get task list item element
 	var taskSelected = document.querySelector(
 		".task-item[data-task-id='" + taskId + "']"
 	);
+
+	// get content from task name and type
+	var taskName = taskSelected.querySelector("h3.task-name").textContent;
+
+	var taskType = taskSelected.querySelector("span.task-type").textContent;
+	document.querySelector("input[name='task-name']").value = taskName;
+	document.querySelector("select[name='task-type']").value = taskType;
+	document.querySelector("#save-task").textContent = "Save Task";
+	formEl.setAttribute("data-task-id", taskId);
 };
 
+// Delete tasks
 var deleteTask = function (taskId) {
 	var taskSelected = document.querySelector(
 		".task-item[data-task-id='" + taskId + "']"
 	);
 	taskSelected.remove();
 };
-// Create a new task
+// event listener: reate a new task
 formEl.addEventListener("submit", taskFormHandler);
 
-// for edit and delete buttons
+// event listener: for edit and delete buttons
 pageContentEl.addEventListener("click", taskButtonHandler);
