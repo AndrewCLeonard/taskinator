@@ -1,10 +1,12 @@
-// Left off spot text to search:
-// return actionContainerEl;
-// https://courses.bootcampspot.com/courses/951/pages/4-dot-3-6-dynamically-create-buttons?module_item_id=330227
+/*
+Left off spot text to search:
+ 
 
+*/
+
+var taskIdCounter = 0;
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
-var taskIDCounter = 0;
 
 var taskFormHandler = function (event) {
 	event.preventDefault();
@@ -36,7 +38,7 @@ var createTaskEl = function (taskDataObj) {
 	listItemEl.className = "task-item";
 
 	// add task id as a custom attribute
-	listItemEl.setAttribute("data-task-id", taskIDCounter);
+	listItemEl.setAttribute("data-task-id", taskIdCounter);
 
 	// create div to hold task info and add to list item
 	var taskInfoEl = document.createElement("div");
@@ -49,34 +51,56 @@ var createTaskEl = function (taskDataObj) {
 		"</span>";
 	listItemEl.appendChild(taskInfoEl);
 
+	// create task actions (buttons and select) for task
+	var taskActionsEl = createTaskActions(taskIdCounter);
+	listItemEl.appendChild(taskActionsEl);
+
+	tasksToDoEl.appendChild(listItemEl);
+
 	// add entire list item to list
 	tasksToDoEl.appendChild(listItemEl);
 
-	// increment taskIDCounter for next unique ID
-	taskIDCounter++;
+	// increment taskIdCounter for next unique ID
+	taskIdCounter++;
 };
 
 // create action buttons for each task
-var createTaskActions = function (taskID) {
+var createTaskActions = function (taskId) {
+	// create container to hold elements
 	var actionContainerEl = document.createElement("div");
 	actionContainerEl.className = "task-actions";
+
+	// create edit button
+	var editButtonEl = document.createElement("button");
+	editButtonEl.textContent = "Edit";
+	editButtonEl.className = "btn edit-btn";
+	editButtonEl.setAttribute("data-task-id", taskId);
+	actionContainerEl.appendChild(editButtonEl);
+	// create delete button
+	var deleteButtonEl = document.createElement("button");
+	deleteButtonEl.textContent = "Delete";
+	deleteButtonEl.className = "btn delete-btn";
+	deleteButtonEl.setAttribute("data-task-id", taskId);
+	actionContainerEl.appendChild(deleteButtonEl);
+	// create change status dropdown
+	var statusSelectEl = document.createElement("select");
+	statusSelectEl.setAttribute("name", "status-change");
+	statusSelectEl.setAttribute("data-task-id", taskId);
+	statusSelectEl.className = "select-status";
+	actionContainerEl.appendChild(statusSelectEl);
+	// create status options
+	var statusChoices = ["To Do", "In Progress", "Completed"];
+
+	for (var i = 0; i < statusChoices.length; i++) {
+		// create option element
+		var statusOptionEl = document.createElement("option");
+		statusOptionEl.setAttribute("value", statusChoices[i]);
+		statusOptionEl.textContent = statusChoices[i];
+
+		// append to select
+		statusSelectEl.appendChild(statusOptionEl);
+	}
 	return actionContainerEl;
 };
-
-// create edit button
-var editButtonEl = document.createElement("button");
-editButtonEl.textContent = "Edit";
-editButtonEl.className = "btn edit-btn";
-editButtonEl.setAttribute("data-task-id", taskID);
-
-actionContainerEl.appendChild(editButtonEl);
-
-// create delete button
-var deleteButtonEl = document.createElement("button");
-deleteButtonEl.textContent = "Delete";
-deleteButtonEl.className = "btn delete-btn";
-deleteButtonEl.setAttribute("data-task-id", taskID);
-
-actionContainerEl.appendChild(deleteButtonEL);
 
 formEl.addEventListener("submit", taskFormHandler);
