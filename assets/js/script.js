@@ -1,12 +1,14 @@
 /*
 Left off spot text to search:
- 
-
+ Add an Edit Task Function
+ https://courses.bootcampspot.com/courses/951/pages/4-dot-3-8-add-the-ability-to-edit-a-task?module_item_id=330250
 */
-
+// selectors
 var taskIdCounter = 0;
+
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
+var pageContentEl = document.querySelector("#page-content");
 
 var taskFormHandler = function (event) {
 	event.preventDefault();
@@ -16,7 +18,7 @@ var taskFormHandler = function (event) {
 	).value;
 
 	// check if input values are empty strings
-	if (!taskNameInput || !taskTypeInput) {
+	if (taskNameInput === "" || taskTypeInput === "") {
 		alert("You need to fill out the task form!");
 		return false;
 	}
@@ -54,10 +56,6 @@ var createTaskEl = function (taskDataObj) {
 	// create task actions (buttons and select) for task
 	var taskActionsEl = createTaskActions(taskIdCounter);
 	listItemEl.appendChild(taskActionsEl);
-
-	tasksToDoEl.appendChild(listItemEl);
-
-	// add entire list item to list
 	tasksToDoEl.appendChild(listItemEl);
 
 	// increment taskIdCounter for next unique ID
@@ -100,7 +98,33 @@ var createTaskActions = function (taskId) {
 		// append to select
 		statusSelectEl.appendChild(statusOptionEl);
 	}
+
 	return actionContainerEl;
 };
 
+var taskButtonHandler = function (event) {
+	// get target element from event
+	var targetEl = event.target;
+	// event button was clicked
+	if (event.target.matches(".edit-btn")) {
+		var taskId = targetEl.getAttribute("data-task-id");
+		editTask(taskId);
+	}
+	// delete button was clicked
+	else if (event.target.matches(".delete-btn")) {
+		var taskId = targetEl.getAttribute("data-task-id");
+		deleteTask(taskId);
+	}
+};
+
+var deleteTask = function (taskId) {
+	var taskSelected = document.querySelector(
+		".task-item[data-task-id='" + taskId + "']"
+	);
+	taskSelected.remove();
+};
+// Create a new task
 formEl.addEventListener("submit", taskFormHandler);
+
+// for edit and delete buttons
+pageContentEl.addEventListener("click", taskButtonHandler);
