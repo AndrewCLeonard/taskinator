@@ -1,6 +1,6 @@
 /*
 Left off spot text to search:
- Add an Edit Task Function
+ We didn't add data-task-id attributes to these elements, so how do we find them? We already have the parent <li> element, so we can use that as a querySelector() starting point.
  https://courses.bootcampspot.com/courses/951/pages/4-dot-3-8-add-the-ability-to-edit-a-task?module_item_id=330250
 */
 // selectors
@@ -115,6 +115,15 @@ var taskButtonHandler = function (event) {
 		var taskId = targetEl.getAttribute("data-task-id");
 		deleteTask(taskId);
 	}
+};
+
+var editTask = function (taskId) {
+	console.log("editing task #" + taskId);
+
+	//get task list item element
+	var taskSelected = document.querySelector(
+		".task-item[data-task-id='" + taskId + "']"
+	);
 };
 
 var deleteTask = function (taskId) {
