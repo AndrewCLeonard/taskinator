@@ -186,7 +186,15 @@ var taskStatusChangeHandler = function (event) {
 		tasksInProgressEl.appendChild(taskSelected);
 	} else if (statusValue === "completed") {
 		tasksCompletedEl.appendChild(taskSelected);
+	} else {
+		// update tasks in tasks array
+		for (var i = 0; i < tasks.length; i++) {
+			if (tasks[i].id === parseInt(taskId)) {
+				tasks[i].status = statusValue;
+			}
+		}
 	}
+	console.log(tasks);
 };
 
 // task edit functionality
@@ -213,6 +221,19 @@ var deleteTask = function (taskId) {
 		".task-item[data-task-id='" + taskId + "']"
 	);
 	taskSelected.remove();
+
+	// create new array to hold updated list of tasks
+	var updatedTaskArr = [];
+
+	// loop through current tasks
+	for (var i = 0 ; i < tasks.length ; i++) {
+		// if tasks[i].id doesn't match the value of taskId, let's keep that task and push it into the new array
+		if (tasks[i].id !== parseInt(taskId)) {
+			updatedTaskArr.push(tasks[i]);
+		}
+	}
+	// reassign tasks array to be the same as updatedTaskArr
+	tasks = updatedTaskArr; 
 };
 
 // event listener: reate a new task
