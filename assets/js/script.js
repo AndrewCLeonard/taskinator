@@ -46,6 +46,7 @@ var taskFormHandler = function (event) {
 		createTaskEl(taskDataObj);
 	}
 };
+
 // creates: TaskEl, taskId, taskInfoEl, taskActionsEl, & increments counter
 var createTaskEl = function (taskDataObj) {
 	// create list item
@@ -61,21 +62,39 @@ var createTaskEl = function (taskDataObj) {
 	taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
 	listItemEl.appendChild(taskInfoEl);
 
+	// create task actions (buttons and select) for task
+	var taskActionsEl = createTaskActions(taskIdCounter);
+	listItemEl.appendChild(taskActionsEl);
+
+	switch (taskDataObj.status) {
+		case "to do":
+			taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 0;
+			tasksToDoEl.append(listItemEl);
+			console.log("to do");
+			break;
+		case "in progress":
+			taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 1;
+			tasksInProgressEl.append(listItemEl);
+			console.log("In Progress");
+			break;
+		case "completed":
+			taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 2;
+			tasksCompletedEl.append(listItemEl);
+			console.log("completed");
+			break;
+		default:
+			console.log("Something went wrong!");
+	}
 	taskDataObj.id = taskIdCounter;
 	tasks.push(taskDataObj);
 
 	saveTasks();
 
-	// create task actions (buttons and select) for task
-	var taskActionsEl = createTaskActions(taskIdCounter);
-	listItemEl.appendChild(taskActionsEl);
-	tasksToDoEl.appendChild(listItemEl);
-
 	// increment taskIdCounter for next unique ID
 	taskIdCounter++;
 };
 
-// action buttons for each task-
+// action buttons for each task
 var createTaskActions = function (taskId) {
 	// create container to hold elements
 	var actionContainerEl = document.createElement("div");
@@ -161,7 +180,7 @@ var taskStatusChangeHandler = function (event) {
 
 	// find the parent task item element based on the id
 	var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
-	
+
 	// get the currently selected option's value and convert to lowercase
 	var statusValue = event.target.value.toLowerCase();
 
@@ -243,8 +262,9 @@ var loadTasks = function () {
 		return false;
 	}
 	// Convert tasks from the string format back into an array of objects.
-	savedTasks = JSON.parse(savedTasks);
-	// Iterate through a tasks array and create task elements on the page from it.
+	savedTasks = JSON.parse(tasks);
+
+	// loop through savedTasks array
 	for (var i = 0; i < savedTasks.length; i++) {
 		// pass each task object into the `createTaskEl()` function
 		createTaskEl(savedTasks[i]);
